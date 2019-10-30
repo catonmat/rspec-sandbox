@@ -46,9 +46,22 @@ RSpec.describe Movie do
 
   describe ':start_shooting method' do
     it 'expects an actor to do 3 actions' do
+      expect(stuntman).to receive(:ready?)
       expect(stuntman).to receive(:act).at_most(2).times
+      expect(stuntman).to receive(:fall_off_ladder)
+      expect(stuntman).to receive(:light_on_fire)
 
       subject.start_shooting
+    end
+  end
+
+  describe 'basic setup' do
+    it 'only allows defined methods to be invoked' do
+      stuntman = double('Mr Danger')
+      allow(stuntman).to receive_messages(fall_off_ladder: 'Ouch!', light_on_fire: true)
+
+      expect(stuntman.fall_off_ladder).to eq('Ouch!')
+      expect(stuntman.light_on_fire).to eq(true)
     end
   end
 end
